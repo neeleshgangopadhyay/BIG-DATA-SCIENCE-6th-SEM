@@ -1,0 +1,293 @@
+bmsce@bmsce-Precision-T1700:~$ cd cassandra/apache-cassandra-3.11.0/
+bmsce@bmsce-Precision-T1700:~/cassandra/apache-cassandra-3.11.0$ cd bin
+bmsce@bmsce-Precision-T1700:~/cassandra/apache-cassandra-3.11.0/bin$ ./cqlsh
+Connected to Test Cluster at 127.0.0.1:9042.
+[cqlsh 5.0.1 | Cassandra 3.11.4 | CQL spec 3.4.4 | Native protocol v4]
+Use HELP for help.
+cqlsh> create keyspace students with replication ={}
+   ... 
+   ... 
+   ... 
+   ... bkchkdbhkbv
+Statements are terminated with a ';'.  You can press CTRL-C to cancel an incomplete statement.
+cqlsh> create keyspace students with replication={
+   ... 'class':'SimpleStrategy',
+   ... 'replication_factor':1};
+AlreadyExists: Keyspace 'students' already exists
+cqlsh> describe keyspaces
+
+students       system_auth  project  system_distributed
+system_schema  system       student  system_traces     
+
+cqlsh> drop table students
+   ... 
+   ... 
+cqlsh> describe keyspaces
+
+students       system_auth  project  system_distributed
+system_schema  system       student  system_traces     
+
+cqlsh> drop keyspace students
+   ... 
+   ... 
+   ... 
+   ... 
+Statements are terminated with a ';'.  You can press CTRL-C to cancel an incomplete statement.
+   ... 
+   ... 
+cqlsh> describe keyspaces
+
+students       system_auth  project  system_distributed
+system_schema  system       student  system_traces     
+
+cqlsh> DROP KEYSPACE students
+   ... 
+cqlsh> describe keyspaces;
+
+students       system_auth  project  system_distributed
+system_schema  system       student  system_traces     
+
+cqlsh> DROP KEYSPACE students;
+
+^C^C^C   
+cqlsh> describe keyspaces;
+
+system_schema  system   student             system_traces
+system_auth    project  system_distributed
+
+cqlsh> create keyspace students with replication={ 'class':'SimpleStrategy', 'replication_factor':1};
+cqlsh> describe keyspaces;
+
+students       system_auth  project  system_distributed
+system_schema  system       student  system_traces     
+
+cqlsh> select * from system.schema_keyspaces;
+InvalidRequest: Error from server: code=2200 [Invalid query] message="unconfigured table schema_keyspaces"
+cqlsh> select * from system;
+InvalidRequest: Error from server: code=2200 [Invalid query] message="No keyspace has been specified. USE a keyspace, or explicitly specify keyspace.tablename"
+cqlsh> select * from system.schema_keyspaces;
+InvalidRequest: Error from server: code=2200 [Invalid query] message="unconfigured table schema_keyspaces"
+cqlsh> use students
+   ... ;
+cqlsh:students> create table Student_Info(
+            ... RollNo int primary key,
+            ... StudName text,
+            ... DateofJoining timestamp,
+            ... LastExamPercent double);
+cqlsh:students> describe tables;
+
+student_info
+
+cqlsh:students> describe table student_info;
+
+CREATE TABLE students.student_info (
+    rollno int PRIMARY KEY,
+    dateofjoining timestamp,
+    lastexampercent double,
+    studname text
+) WITH bloom_filter_fp_chance = 0.01
+    AND caching = {'keys': 'ALL', 'rows_per_partition': 'NONE'}
+    AND comment = ''
+    AND compaction = {'class': 'org.apache.cassandra.db.compaction.SizeTieredCompactionStrategy', 'max_threshold': '32', 'min_threshold': '4'}
+    AND compression = {'chunk_length_in_kb': '64', 'class': 'org.apache.cassandra.io.compress.LZ4Compressor'}
+    AND crc_check_chance = 1.0
+    AND dclocal_read_repair_chance = 0.1
+    AND default_time_to_live = 0
+    AND gc_grace_seconds = 864000
+    AND max_index_interval = 2048
+    AND memtable_flush_period_in_ms = 0
+    AND min_index_interval = 128
+    AND read_repair_chance = 0.0
+    AND speculative_retry = '99PERCENTILE';
+
+cqlsh:students> begin batch
+            ... insert into
+            ... student_info(RollNo,StudName,DateofJoining,lastExampercent)
+            ... values(1,'Michael Storm','2012-03-29'.69.6)
+            ... insert into student_info
+            ... (RollNo,StudName,DateofJoining,LastExamPercent)
+            ... values(2,'Stephen Fox','2013-02-27',72.5)
+            ... Apply Batch;
+SyntaxException: line 4:37 mismatched input '.' expecting ')' (...lastExampercent)values(1,'Michael Storm','2012-03-29'[.]...)
+cqlsh:students> BEGIN BATCH 
+            ... INSERT INTO  
+            ... student_info(RollNo,StudName,DateofJoining,LastExamPercent)  VALUES (1,'Michael Storm','2012-03-29', 69.6) 
+            ... INSERT INTO student_info  
+            ... (RollNo,StudName,DateofJoining,LastExamPercent) VALUES  (2,'Stephen Fox','2013-02-27', 72.5) 
+            ... APPLY BATCH; 
+cqlsh:students> 
+cqlsh:students> select*from Student_info;
+
+ rollno | dateofjoining                   | lastexampercent | studname
+--------+---------------------------------+-----------------+---------------
+      1 | 2012-03-28 18:30:00.000000+0000 |            69.6 | Michael Storm
+      2 | 2013-02-26 18:30:00.000000+0000 |            72.5 |   Stephen Fox
+
+(2 rows)
+cqlsh:students> update Student_info set StudName='David Sheen' where RollNo = 2;
+cqlsh:students> select*from Student_info;
+
+ rollno | dateofjoining                   | lastexampercent | studname
+--------+---------------------------------+-----------------+---------------
+      1 | 2012-03-28 18:30:00.000000+0000 |            69.6 | Michael Storm
+      2 | 2013-02-26 18:30:00.000000+0000 |            72.5 |   David Sheen
+
+(2 rows)
+cqlsh:students> select from Student_info where Rollno in (1,2,3);
+SyntaxException: line 1:7 no viable alternative at input 'from' (select [from]...)
+cqlsh:students> select * from student_info where Rollno in (1,2,3);
+
+ rollno | dateofjoining                   | lastexampercent | studname
+--------+---------------------------------+-----------------+---------------
+      1 | 2012-03-28 18:30:00.000000+0000 |            69.6 | Michael Storm
+      2 | 2013-02-26 18:30:00.000000+0000 |            72.5 |   David Sheen
+
+(2 rows)
+cqlsh:students> begin batch
+            ... insert into
+            ... student_info(RollNo,Studname,DateofJoining,LastExamPercent)
+            ... VALUES(3,'Stephen Fox','2013-02-25',71.2)
+            ... apply batch;
+cqlsh:students> select * from student_info where Rollno in (1,2,3);
+
+ rollno | dateofjoining                   | lastexampercent | studname
+--------+---------------------------------+-----------------+---------------
+      1 | 2012-03-28 18:30:00.000000+0000 |            69.6 | Michael Storm
+      2 | 2013-02-26 18:30:00.000000+0000 |            72.5 |   David Sheen
+      3 | 2013-02-24 18:30:00.000000+0000 |            71.2 |   Stephen Fox
+
+(3 rows)
+cqlsh:students> create index on student_info(studname);
+cqlsh:students> select* from student_info where studname = 'Stephen Fox';
+
+ rollno | dateofjoining                   | lastexampercent | studname
+--------+---------------------------------+-----------------+-------------
+      3 | 2013-02-24 18:30:00.000000+0000 |            71.2 | Stephen Fox
+
+(1 rows)
+cqlsh:students> create index on Student_info(LastExamPercent);
+cqlsh:students> select RollNo,LastExamPercent from Student_info LIMIT 2;
+
+ rollno | lastexampercent
+--------+-----------------
+      1 |            69.6
+      2 |            72.5
+
+(2 rows)
+cqlsh:students> select *  Rollno,StudName As "Name" from Student_Info; 
+SyntaxException: line 1:10 mismatched input 'Rollno' expecting K_FROM (select *  [Rollno]...)
+cqlsh:students> select   Rollno,StudName As "Name" from Student_Info; 
+
+ rollno | Name
+--------+---------------
+      1 | Michael Storm
+      2 |   David Sheen
+      3 |   Stephen Fox
+
+(3 rows)
+cqlsh:students> select   Rollno,StudName As "Name" from Student_Info; 
+
+ rollno | Name
+--------+---------------
+      1 | Michael Storm
+      2 |   David Sheen
+      3 |   Stephen Fox
+
+(3 rows)
+cqlsh:students> update Student_info Set StudName="Samaira",LastExamPercent = 85.7 where Rollno =2;
+SyntaxException: line 1:42 no viable alternative at input ',' (update Student_info Set StudName=["Samair]a",...)
+cqlsh:students> update Student_info Set StudName="Samaira",LastExamPercent = 85.7 where RollNo =2;
+SyntaxException: line 1:42 no viable alternative at input ',' (update Student_info Set StudName=["Samair]a",...)
+cqlsh:students> update Student_info Set StudName='Samaira',LastExamPercent = 85.7 where RollNo =2;
+cqlsh:students> select RollNo,StudName,LastExamPercent From StudentInfo where RollNo =2;
+InvalidRequest: Error from server: code=2200 [Invalid query] message="unconfigured table studentinfo"
+cqlsh:students> select * RollNo,StudName,LastExamPercent From StudentInfo where RollNo =2;
+SyntaxException: line 1:9 mismatched input 'RollNo' expecting K_FROM (select * [RollNo]...)
+cqlsh:students> select  RollNo,StudName,LastExamPercent From StudentInfo where RollNo =2;
+cqlsh:students> select * RollNo,StudName,LastExamPercent From Student_Info where RollNo =2;
+SyntaxException: line 1:9 mismatched input 'RollNo' expecting K_FROM (select * [RollNo]...)
+cqlsh:students> select  RollNo,StudName,LastExamPercent From Student_Info where RollNo =2;
+
+ rollno | studname | lastexampercent
+--------+----------+-----------------
+      2 |  Samaira |            85.7
+
+(1 rows)
+cqlsh:students> delete LastExamPercent From Student_info where Rollno= 2;
+cqlsh:students> select* from Student_info where RollNo=2;
+
+ rollno | dateofjoining                   | lastexampercent | studname
+--------+---------------------------------+-----------------+----------
+      2 | 2013-02-26 18:30:00.000000+0000 |            null |  Samaira
+
+(1 rows)
+cqlsh:students> delete From Student_info where Rollno=2;
+cqlsh:students> select* from Student_info where RollNo=2;
+
+ rollno | dateofjoining | lastexampercent | studname
+--------+---------------+-----------------+----------
+
+(0 rows)
+cqlsh:students> create table project_details(
+            ... project_id int,
+            ... project_name text,
+            ... stud_name text,
+            ... rating double,
+            ... duration int,
+            ... Primary Key(project_id,project_name));
+cqlsh:students> begin batch
+            ... insert into project_details(project_id,project_name,Stud_name,trating,duration) values(1,'MS data migration','David Sheen',3.5,720) apply batch;
+InvalidRequest: Error from server: code=2200 [Invalid query] message="Undefined column name trating"
+cqlsh:students> begin batch insert into project_details(project_id,project_name,Stud_name,rating,duration) values(1,'MS data migration','David Sheen',3.5,720) apply batch;
+cqlsh:students> begin batch insert into project_details(project_id,project_name,Stud_name,rating,duration) values(2,'MS data warehouse','David Sheen',3.9,1440) apply batch;
+cqlsh:students> begin batch insert into project_details(project_id,project_name,Stud_name,rating,duration) values(2,'Sap Reporting','Stephen Fox',4.2,3000) apply batch;
+cqlsh:students> begin batch insert into project_details(project_id,project_name,Stud_name,rating,duration) values(2,'Sap BI DW','Stephen Fox',4,9000) apply batch;
+cqlsh:students> select * from project_details;
+
+ project_id | project_name      | duration | rating | stud_name
+------------+-------------------+----------+--------+-------------
+          1 | MS data migration |      720 |    3.5 | David Sheen
+          2 | MS data warehouse |     1440 |    3.9 | David Sheen
+          2 |         Sap BI DW |     9000 |      4 | Stephen Fox
+          2 |     Sap Reporting |     3000 |    4.2 | Stephen Fox
+
+(4 rows)
+cqlsh:students> select* from project_details where project_id = 1;
+
+ project_id | project_name      | duration | rating | stud_name
+------------+-------------------+----------+--------+-------------
+          1 | MS data migration |      720 |    3.5 | David Sheen
+
+(1 rows)
+cqlsh:students> select* from project_details where project_id in (1,2) order by project_name DESC;
+InvalidRequest: Error from server: code=2200 [Invalid query] message="Cannot page queries with both ORDER BY and a IN restriction on the partition key; you must either remove the ORDER BY or the IN and sort client side, or disable paging for this query"
+cqlsh:students> PAGING OFF
+Disabled Query paging.
+cqlsh:students> select* from project_details where project_id in (1,2) order by project_name DESC;
+
+ project_id | project_name      | duration | rating | stud_name
+------------+-------------------+----------+--------+-------------
+          2 |     Sap Reporting |     3000 |    4.2 | Stephen Fox
+          2 |         Sap BI DW |     9000 |      4 | Stephen Fox
+          2 | MS data warehouse |     1440 |    3.9 | David Sheen
+          1 | MS data migration |      720 |    3.5 | David Sheen
+
+(4 rows)
+cqlsh:students> describe keyspaces;
+
+students       system_auth  project  system_distributed
+system_schema  system       student  system_traces     
+
+cqlsh:students> describe keyspaces;
+
+students       system_auth  project  system_distributed
+system_schema  system       student  system_traces     
+
+cqlsh:students> describe keyspaces;
+
+students       system_auth  project  system_distributed
+system_schema  system       student  system_traces     
+
+cqlsh:students> 
+
+
