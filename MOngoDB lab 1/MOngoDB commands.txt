@@ -1,0 +1,159 @@
+> show dbs
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+> use Student;
+switched to db Student
+> db;
+Student
+> show collections;
+> show collections
+> show collections;
+> db;
+Student
+> db.Students.insert({Rollno:10,Name:"Xyz",Age:21,ContactNo:9968072336, EmailId:"xyz.cs18@bmsce.ac.in"});
+WriteResult({ "nInserted" : 1 })
+> db.Student_info.insertMany([{Rollno:11,Name:"ABC",Age:21,ContactNo:8197405662,EmailId:"abc.cs18@bmsce.ac.in"},{RollNo=12,Name="DEF",Age:19,ContactNo:6362459021,EmailId:"def.cs18@bmsce.ac.in"}]);
+2021-04-05T15:09:51.447+0530 E QUERY    [js] SyntaxError: missing : after property id @(shell):1:117
+> db.Student_info.insertMany([{Rollno:11,Name:"ABC",Age:21,ContactNo:8197405662,EmailId:"abc.cs18@bmsce.ac.in"},{RollNo:12,Name:"DEF",Age:19,ContactNo:6362459021,EmailId:"def.cs18@bmsce.ac.in"}]);
+{
+        "acknowledged" : true,
+        "insertedIds" : [
+                ObjectId("606adb25252f51426e985427"),
+                ObjectId("606adb25252f51426e985428")
+        ]
+}
+> db.Student_info.find();
+{ "_id" : ObjectId("606adb25252f51426e985427"), "Rollno" : 11, "Name" : "ABC", "Age" : 21, "ContactNo" : 8197405662, "EmailId" : "abc.cs18@bmsce.ac.in" }
+{ "_id" : ObjectId("606adb25252f51426e985428"), "RollNo" : 12, "Name" : "DEF", "Age" : 19, "ContactNo" : 6362459021, "EmailId" : "def.cs18@bmsce.ac.in" }
+> db.Students.find();
+{ "_id" : ObjectId("606ad9a9252f51426e985426"), "Rollno" : 10, "Name" : "Xyz", "Age" : 21, "ContactNo" : 9968072336, "EmailId" : "xyz.cs18@bmsce.ac.in" }
+> db.Student_info.insert({Rollno:10,Name:"Xyz",Age:21,ContactNo:9968072336, EmailId:"xyz.cs18@bmsce.ac.in"});
+WriteResult({ "nInserted" : 1 })
+> db.Students.find();
+{ "_id" : ObjectId("606ad9a9252f51426e985426"), "Rollno" : 10, "Name" : "Xyz", "Age" : 21, "ContactNo" : 9968072336, "EmailId" : "xyz.cs18@bmsce.ac.in" }
+> db.Student_info.find();
+{ "_id" : ObjectId("606adb25252f51426e985427"), "Rollno" : 11, "Name" : "ABC", "Age" : 21, "ContactNo" : 8197405662, "EmailId" : "abc.cs18@bmsce.ac.in" }
+{ "_id" : ObjectId("606adb25252f51426e985428"), "RollNo" : 12, "Name" : "DEF", "Age" : 19, "ContactNo" : 6362459021, "EmailId" : "def.cs18@bmsce.ac.in" }
+{ "_id" : ObjectId("606adb85252f51426e985429"), "Rollno" : 10, "Name" : "Xyz", "Age" : 21, "ContactNo" : 9968072336, "EmailId" : "xyz.cs18@bmsce.ac.in" }
+> db.Student_info.update({Rollno:10},{$set:{EmailId:"zxy,cs18@bmsce.ac.in"}});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.Student_info.find();
+{ "_id" : ObjectId("606adb25252f51426e985427"), "Rollno" : 11, "Name" : "ABC", "Age" : 21, "ContactNo" : 8197405662, "EmailId" : "abc.cs18@bmsce.ac.in" }
+{ "_id" : ObjectId("606adb25252f51426e985428"), "RollNo" : 12, "Name" : "DEF", "Age" : 19, "ContactNo" : 6362459021, "EmailId" : "def.cs18@bmsce.ac.in" }
+{ "_id" : ObjectId("606adb85252f51426e985429"), "Rollno" : 10, "Name" : "Xyz", "Age" : 21, "ContactNo" : 9968072336, "EmailId" : "zxy,cs18@bmsce.ac.in" }
+> db.Student_info.replaceOne({RollNo:11},{RollNo:11,Name:"FEM",Age:21,ContactNo:8197405662,EmailId:"abc.cs18@bmsce.ac.in"});
+{ "acknowledged" : true, "matchedCount" : 0, "modifiedCount" : 0 }
+> db.Student_info.find();
+{ "_id" : ObjectId("606adb25252f51426e985427"), "Rollno" : 11, "Name" : "ABC", "Age" : 21, "ContactNo" : 8197405662, "EmailId" : "abc.cs18@bmsce.ac.in" }
+{ "_id" : ObjectId("606adb25252f51426e985428"), "RollNo" : 12, "Name" : "DEF", "Age" : 19, "ContactNo" : 6362459021, "EmailId" : "def.cs18@bmsce.ac.in" }
+{ "_id" : ObjectId("606adb85252f51426e985429"), "Rollno" : 10, "Name" : "Xyz", "Age" : 21, "ContactNo" : 9968072336, "EmailId" : "zxy,cs18@bmsce.ac.in" }
+> db.Student_info.replaceOne({RollNo:11},{RollNo:11,Name:"FEM",Age:21,ContactNo:8197405662,EmailId:"abc.cs18@bmsce.ac.in"});
+{ "acknowledged" : true, "matchedCount" : 0, "modifiedCount" : 0 }
+> db.Student_info.replaceOne({RollNo:11},{RollNo:11,Name:"FEM",Age:21,ContactNo:8197405662,EmailId:"abc.cs18@bmsce.ac.in"});
+{ "acknowledged" : true, "matchedCount" : 0, "modifiedCount" : 0 }
+> db.Student_info.update({Rollno:11},{$set:{Name:"FEM"}});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.Student_info.find();
+{ "_id" : ObjectId("606adb25252f51426e985427"), "Rollno" : 11, "Name" : "FEM", "Age" : 21, "ContactNo" : 8197405662, "EmailId" : "abc.cs18@bmsce.ac.in" }
+{ "_id" : ObjectId("606adb25252f51426e985428"), "RollNo" : 12, "Name" : "DEF", "Age" : 19, "ContactNo" : 6362459021, "EmailId" : "def.cs18@bmsce.ac.in" }
+{ "_id" : ObjectId("606adb85252f51426e985429"), "Rollno" : 10, "Name" : "Xyz", "Age" : 21, "ContactNo" : 9968072336, "EmailId" : "zxy,cs18@bmsce.ac.in" }
+> mongoexport--db Student -c Student_info --out Student_info.csv;
+2021-04-05T15:41:15.036+0530 E QUERY    [js] SyntaxError: missing ; before statement @(shell):1:13
+> mongoexport -- db Student -- collection Stuent_info --type csv-- fields rollno,name,contact,emailId --out D:\Student_info.csv;
+2021-04-05T15:47:34.362+0530 E QUERY    [js] SyntaxError: missing ; before statement @(shell):1:15
+> mongoexport -- db Student -- collection Stuent_info --type csv-- fields rollno,name,contact,emailId --out D:\Student_info.csv
+2021-04-05T15:47:43.652+0530 E QUERY    [js] SyntaxError: missing ; before statement @(shell):1:15
+>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
